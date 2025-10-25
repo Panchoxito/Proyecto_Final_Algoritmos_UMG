@@ -769,14 +769,14 @@ class App(Tk):
         self.archivo_rep_cliente = StringVar(); self.archivo_rep_producto = StringVar()
 
     def ui_correo(self):
-        # Título del apartado
+        
         sup = ttk.Frame(self.tab_correo); sup.pack(fill='x')
         Label(sup, text='Envío de Reportes por Correo', bg=color_fondo, fg=color_texto, font=('Segoe UI', 14, 'bold')).pack(side='left')
         
-        # Marco principal
+        
         cont = ttk.Frame(self.tab_correo, padding=20); cont.pack(expand=True, fill='both')
         
-        # Configuración del remitente
+        
         marco_remitente = ttk.LabelFrame(cont, text='Configuración del Remitente', padding=10)
         marco_remitente.pack(fill='x', pady=(0, 15))
         
@@ -790,7 +790,7 @@ class App(Tk):
         
         marco_remitente.columnconfigure(1, weight=1)
         
-        # Configuración del destinatario
+        
         marco_destino = ttk.LabelFrame(cont, text='Configuración del Destinatario', padding=10)
         marco_destino.pack(fill='x', pady=(0, 15))
         
@@ -800,7 +800,7 @@ class App(Tk):
         
         marco_destino.columnconfigure(1, weight=1)
         
-        # Botones de acción
+       
         marco_botones = ttk.Frame(cont)
         marco_botones.pack(fill='x', pady=10)
         
@@ -808,17 +808,16 @@ class App(Tk):
         ttk.Button(marco_botones, text='Generar y Enviar Reporte por Producto', command=self.enviar_reporte_producto).pack(side='left', padx=5)
         ttk.Button(marco_botones, text='Enviar Ambos Reportes', command=self.enviar_ambos_reportes).pack(side='left', padx=5)
         
-        # Estado del envío
+        
         self.estado_correo = StringVar()
         self.estado_correo.set('Listo para enviar reportes')
         ttk.Label(cont, textvariable=self.estado_correo, style='Sub.TLabel').pack(pady=10)
         
-        # Información adicional
-        info_text = """Nota: Para usar Gmail, necesitas generar una "Contraseña de aplicación" en tu cuenta de Google.
-        Ve a: Configuración de Google > Seguridad > Contraseñas de aplicación"""
+       
+        info_text = """Apartado para enviar reportes por correo"""
         ttk.Label(cont, text=info_text, font=('Segoe UI', 9), foreground='gray').pack(pady=10)
 
-    # --- Productos (acciones)
+  
     def refrescar_productos(self):
         if hasattr(self, 'tabla_productos'):
             for i in self.tabla_productos.get_children(): self.tabla_productos.delete(i)
@@ -958,7 +957,7 @@ class App(Tk):
             ok, msg = eliminar_cliente(vals[0]); messagebox.showinfo('Info', msg)
             if ok: self.refrescar_clientes()
     def limpiar_detalle_venta(self):
-        # Coloca placeholders cuando no haya ventas
+        
         if not hasattr(self, 'v_id'):
             return
         self.v_id.set('--'); self.v_prod.set('--'); self.v_cli.set('--')
@@ -988,7 +987,7 @@ class App(Tk):
             self.limpiar_detalle_venta()
 
 
-    # --- Ventas y reportes ---
+    
     def refrescar_combobox(self):
         prods = listar_productos(); clis = listar_clientes()
         if hasattr(self, 'cb_producto'): self.cb_producto['values'] = [f"{p[0]} - {p[1]}" for p in prods]
@@ -1002,7 +1001,7 @@ class App(Tk):
         except: messagebox.showwarning('Atención','La cantidad debe ser numérica'); return
         if cant <= 0: messagebox.showwarning('Atención','La cantidad debe ser mayor que cero'); return
         
-        # VALIDAR STOCK SUFICIENTE
+        
         if prod and cant > float(prod['existencia']):
             messagebox.showwarning('Atención', f'Stock insuficiente. Disponible: {prod["existencia"]}, Solicitado: {cant}'); return
         
@@ -1050,18 +1049,18 @@ class App(Tk):
         if not ruta: return
         generar_reporte_por_producto(ruta); self.archivo_rep_producto.set(ruta); messagebox.showinfo('Listo','Reporte generado')
 
-    # --- Funciones de correo ---
+    
     def enviar_reporte_cliente(self):
         """Genera y envía el reporte por cliente por correo"""
         if not self.validar_datos_correo():
             return
         
         try:
-            # Generar reporte temporal
+            
             ruta_temp = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_reporte_cliente.xlsx')
             generar_reporte_por_cliente(ruta_temp)
             
-            # Enviar por correo
+            
             self.enviar_correo_con_adjunto(
                 asunto='Reporte de Ventas por Cliente',
                 mensaje='Adjunto encontrará el reporte de ventas agrupado por cliente.',
@@ -1069,7 +1068,7 @@ class App(Tk):
                 nombre_archivo='Reporte_Ventas_por_Cliente.xlsx'
             )
             
-            # Limpiar archivo temporal
+            
             if os.path.exists(ruta_temp):
                 os.remove(ruta_temp)
                 
@@ -1083,11 +1082,11 @@ class App(Tk):
             return
         
         try:
-            # Generar reporte temporal
+            
             ruta_temp = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_reporte_producto.xlsx')
             generar_reporte_por_producto(ruta_temp)
             
-            # Enviar por correo
+            
             self.enviar_correo_con_adjunto(
                 asunto='Reporte de Ventas por Producto',
                 mensaje='Adjunto encontrará el reporte de ventas agrupado por producto.',
@@ -1095,7 +1094,7 @@ class App(Tk):
                 nombre_archivo='Reporte_Ventas_por_Producto.xlsx'
             )
             
-            # Limpiar archivo temporal
+            
             if os.path.exists(ruta_temp):
                 os.remove(ruta_temp)
                 
@@ -1109,14 +1108,14 @@ class App(Tk):
             return
         
         try:
-            # Generar reportes temporales
+            
             ruta_cliente = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_reporte_cliente.xlsx')
             ruta_producto = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'temp_reporte_producto.xlsx')
             
             generar_reporte_por_cliente(ruta_cliente)
             generar_reporte_por_producto(ruta_producto)
             
-            # Enviar por correo con ambos adjuntos
+            
             self.enviar_correo_con_adjuntos(
                 asunto='Reportes de Ventas Completos',
                 mensaje='Adjunto encontrará los reportes de ventas por cliente y por producto.',
@@ -1126,7 +1125,7 @@ class App(Tk):
                 ]
             )
             
-            # Limpiar archivos temporales
+            
             for ruta in [ruta_cliente, ruta_producto]:
                 if os.path.exists(ruta):
                     os.remove(ruta)
@@ -1151,7 +1150,7 @@ class App(Tk):
     def enviar_correo_con_adjunto(self, asunto, mensaje, archivo_adjunto, nombre_archivo):
         """Envía un correo con un archivo adjunto"""
         try:
-            # Configurar el mensaje
+            
             msg = EmailMessage()
             msg['From'] = self.ent_correo.get().strip()
             msg['To'] = self.ent_destino.get().strip()
@@ -1159,12 +1158,12 @@ class App(Tk):
             
             msg.set_content(mensaje)
             
-            # Adjuntar archivo
+            
             with open(archivo_adjunto, 'rb') as f:
                 archivo_data = f.read()
                 msg.add_attachment(archivo_data, maintype='application', subtype='vnd.openxmlformats-officedocument.spreadsheetml.sheet', filename=nombre_archivo)
             
-            # Enviar correo
+            
             with smtplib.SMTP('smtp.gmail.com', 587) as server:
                 server.starttls()
                 server.login(self.ent_correo.get().strip(), self.ent_pass.get().strip())
@@ -1179,7 +1178,7 @@ class App(Tk):
     def enviar_correo_con_adjuntos(self, asunto, mensaje, archivos_adjuntos):
         """Envía un correo con múltiples archivos adjuntos"""
         try:
-            # Configurar el mensaje
+            
             msg = EmailMessage()
             msg['From'] = self.ent_correo.get().strip()
             msg['To'] = self.ent_destino.get().strip()
@@ -1187,13 +1186,13 @@ class App(Tk):
             
             msg.set_content(mensaje)
             
-            # Adjuntar archivos
+            
             for archivo_ruta, nombre_archivo in archivos_adjuntos:
                 with open(archivo_ruta, 'rb') as f:
                     archivo_data = f.read()
                     msg.add_attachment(archivo_data, maintype='application', subtype='vnd.openxmlformats-officedocument.spreadsheetml.sheet', filename=nombre_archivo)
             
-            # Enviar correo
+           
             with smtplib.SMTP('smtp.gmail.com', 587) as server:
                 server.starttls()
                 server.login(self.ent_correo.get().strip(), self.ent_pass.get().strip())
@@ -1208,9 +1207,7 @@ class App(Tk):
    
 
 def descontar_stock(codigo_producto, cantidad):
-    """Resta 'cantidad' a la existencia del producto en 'productos' (col. D) y guarda el libro.
-    Columnas esperadas: [id_ai,codigo,nombre,existencia,proveedor,precio]
-    """
+  
     try:
         cantidad_a_descontar = float(str(cantidad).replace(',', '.'))
     except Exception:
@@ -1222,10 +1219,10 @@ def descontar_stock(codigo_producto, cantidad):
     wb, sh = obtener_hoja('productos')
     fila_producto = None
     
-    # Buscar el producto por código
+  
     for idx, fila in enumerate(sh.iter_rows(values_only=True), start=1):
         if idx == 1:
-            continue  # saltar encabezado
+            continue  
         if fila and str(fila[1]) == str(codigo_producto):
             fila_producto = idx
             break
@@ -1234,22 +1231,22 @@ def descontar_stock(codigo_producto, cantidad):
         return False
     
     try:
-        # Obtener stock actual
+        
         stock_actual = float(str(sh.cell(row=fila_producto, column=4).value).replace(',', '.')) if sh.cell(row=fila_producto, column=4).value is not None else 0.0
     except Exception:
         stock_actual = 0.0
     
-    # Calcular nuevo stock
+    
     nuevo_stock = stock_actual - cantidad_a_descontar
     
-    # Asegurar que el stock no sea negativo
+   
     if nuevo_stock < 0:
         nuevo_stock = 0.0
     
-    # Actualizar el stock en la hoja
+    
     sh.cell(row=fila_producto, column=4).value = float(nuevo_stock)
     
-    # Guardar los cambios
+    
     guardar_libro(wb)
     
     return True

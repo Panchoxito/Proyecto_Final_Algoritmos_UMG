@@ -317,8 +317,10 @@ class App(tk.Tk):
                 "Unión (A ∪ B)",
                 "Intersección (A ∩ B)",
                 "Diferencia (A − B)",
+                "Diferencia (B − A)",
                 "Diferencia simétrica (A △ B)",
-                "Subconjunto (A ⊆ B)"
+                "Subconjunto (A ⊆ B)",
+                "Subconjunto (B ⊆ A)"
             ]
         )
         combo_op.current(0)
@@ -354,22 +356,34 @@ class App(tk.Tk):
                 _guardar_y_mostrar("A ∪ B", A.union(B))
                 _guardar_y_mostrar("A ∩ B", A.intersection(B))
                 _guardar_y_mostrar("A − B", A.difference(B))
+                _guardar_y_mostrar("B − A", B.difference(A))
                 _guardar_y_mostrar("A △ B", A.symmetric_difference(B))
+                es_sub_a = A.issubset(B)
+                texto_a = f"A ⊆ B  →  {es_sub_a}"
+                salida.insert("end", texto_a + "\n")
+                guardar_conjuntos("subconjunto", a_str, b_str, texto_a)
+                es_sub_b = B.issubset(A)
+                texto_b = f"B ⊆ A  →  {es_sub_b}"
+                salida.insert("end", texto_b + "\n")
+                guardar_conjuntos("subconjunto", a_str, b_str, texto_b)
+            elif op.startswith("Unión (A ∪ B)"):
+                _guardar_y_mostrar("A ∪ B", A.union(B))
+            elif op.startswith("Intersección (A ∩ B)"):
+                _guardar_y_mostrar("A ∩ B", A.intersection(B))
+            elif op.startswith("Diferencia (A − B)"):
+                _guardar_y_mostrar("A − B", A.difference(B))
+            elif op.startswith("Diferencia (B − A)"):
+                _guardar_y_mostrar("B − A", B.difference(A))
+            elif op.startswith("Diferencia simétrica (A △ B)"):
+                _guardar_y_mostrar("A △ B", A.symmetric_difference(B))
+            elif op.startswith("Subconjunto (A ⊆ B)"):
                 es_sub = A.issubset(B)
                 texto = f"A ⊆ B  →  {es_sub}"
                 salida.insert("end", texto + "\n")
                 guardar_conjuntos("subconjunto", a_str, b_str, texto)
-            elif op.startswith("Unión"):
-                _guardar_y_mostrar("A ∪ B", A.union(B))
-            elif op.startswith("Intersección"):
-                _guardar_y_mostrar("A ∩ B", A.intersection(B))
-            elif op.startswith("Diferencia (A − B)"):
-                _guardar_y_mostrar("A − B", A.difference(B))
-            elif op.startswith("Diferencia simétrica"):
-                _guardar_y_mostrar("A △ B", A.symmetric_difference(B))
-            else:  # Subconjunto
-                es_sub = A.issubset(B)
-                texto = f"A ⊆ B  →  {es_sub}"
+            elif op.startswith("Subconjunto (B ⊆ A)"):
+                es_sub = B.issubset(A)
+                texto = f"B ⊆ A  →  {es_sub}"
                 salida.insert("end", texto + "\n")
                 guardar_conjuntos("subconjunto", a_str, b_str, texto)
 
